@@ -20,16 +20,28 @@ def update_model_file(model, mode, episode, score_avg, replace=True):
     Update model file with the model so far. If replace is True, then it will remove all other models with the same mode.
     '''
     new_model_path = f"models/best_model_{mode}_e{episode}_s{score_avg:.2f}.pth"
-    torch.save(model.state_dict(), new_model_path)
     
-    if not replace:
-        return
+    if mode == "simple" or mode == "sensor":
+        model_args = (model.input_size, model.hidden_shape, model.output_size)
+    elif mode == "image":
+        model_args = (model.input_shape, model.cnn_structure)
     
-    old_files = glob.glob(f"models/best_model_{mode}_e*_s*.pth") # Get all files with the same mode
-    for old_file in old_files:
-        os.remove(old_file)
+    model_info = {
+        "episode": episode,
+        "score_avg": score_avg,
+        "mode": mode,
+        "model_args": model_args,
+        "model_state_dict": model.state_dict(),
+    }
+    
+    if replace:
+        old_files = glob.glob(f"models/best_model_{mode}_e*_s*.pth") # Get all files with the same mode
+        for old_file in old_files:
+            os.remove(old_file)
+            
+    torch.save(model_info, new_model_path)
         
-def load_model(model, mode, episode=None):
+def load_model(mode, episode=None):
     # Construct the file pattern to search for models
     file_pattern = f"models/best_model_{mode}_e*_s*.pth"
     # Find all files that match the pattern
@@ -51,13 +63,14 @@ def load_model(model, mode, episode=None):
         model_path = model_files[0]
     
     # Extract episode number and score average from the file name
-    file_name = os.path.basename(model_path)
-    episode = int(file_name.split('_e')[1].split('_')[0])
-    score_avg = float(file_name.split('_s')[1].split('.pth')[0])
+    # file_name = os.path.basename(model_path)
+    # episode = int(file_name.split('_e')[1].split('_')[0])
+    # score_avg = float(file_name.split('_s')[1].split('.pth')[0])
     
-    # Load the model
-    model.load_state_dict(torch.load(model_path, weights_only=False))
-    return episode, score_avg
+    # Load the model information
+    model_info = torch.load(model_path)
+    
+    return model_info
 
 def view_image(image):
     '''

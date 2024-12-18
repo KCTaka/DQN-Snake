@@ -149,6 +149,7 @@ class DQNTrainer:
               gameplay_episodes=1, 
               score_maxlen=100,
               k = 1,
+              save_plot=False,
               ):
         '''
         mode: should be either "simple", "sensor", or "image". Used to save the model file.
@@ -243,6 +244,7 @@ class DQNTrainer:
             # Update the model file if the average score is all-time high
             cur_score_avg = np.mean(score_record)
             if cur_score_avg > max_avg_score:
+                print(f"Model saved with average score {cur_score_avg}")
                 max_avg_score = cur_score_avg
                 update_model_file(self.model, mode, episode, cur_score_avg, replace=True)
             
@@ -259,6 +261,8 @@ class DQNTrainer:
                     "ylabels": ["Average Score", "Score"],
                 }
                 plotter.plot(**mult_data_info)
+                if save_plot:
+                    plotter.save_plot_image(f"plots/training_plot_{mode}.png")
             
             if self.game.stop_game:
                 break

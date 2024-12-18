@@ -42,7 +42,7 @@ def train_dqn(game, mode="simple"):
                     epsilon_linear_decay=1/5_000,
                     min_epsilon=0.05,
                     gamma=0.95,
-                    lr=1e-4,
+                    lr=5e-5,
                     action_num=3,
                     random_rotate=random_rotate,
                     )
@@ -53,9 +53,10 @@ def train_dqn(game, mode="simple"):
         plot=True,
         plot_episodes=100,
         gameplay=False,
-        gameplay_episodes=100,
+        gameplay_episodes=10,
         score_maxlen=100,
         k = 1,
+        save_plot=True,
     )
 
 if __name__ == "__main__":
@@ -63,7 +64,7 @@ if __name__ == "__main__":
         window_size=400, 
         grid_size=8, 
         default_reward=-0.1,
-        food_reward=2,
+        food_reward=1,
         death_reward=-1,
         tick_rate=60,
     )

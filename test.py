@@ -8,6 +8,28 @@ from snake_states import sensor_state, binary_state, image_state
 
 from helper import view_image, load_model
 
+def get_model(mode, episode=None):
+    '''
+    Load the model from the given mode and episode.
+    '''
+    model_info = load_model(mode, episode)
+    
+    episode = model_info["episode"]
+    score_avg = model_info["score_avg"]
+    model_args = model_info["model_args"]
+    model_state_dict = model_info["model_state_dict"]
+    
+    if mode == "simple" or mode == "sensor":
+        model = FCNN(*model_args)
+    elif mode == "image":
+        model = CNN(*model_args)
+        
+    model.load_state_dict(model_state_dict)
+    
+    print(f"Model mode {mode} loaded from episode {episode} with average score {score_avg}")
+    
+    return model
+
 
 def test_agent(model, game, get_state_from_sequence, num_frames = 4, num_games = 1000):
     '''
@@ -81,30 +103,30 @@ def test_model(mode = "simple"):
     game.init_pygame()
     
     if mode == "simple":
-        model = FCNN(11, [128], 3)
+        # model = FCNN(11, [128], 3)
         get_state_from_sequence = binary_state
         
     elif mode == "sensor":
         sensors = np.linspace(-np.pi*5/4, np.pi*5/4, 13)
-        model = FCNN(len(sensors)*2, [256, 128], 3)
+        # model = FCNN(len(sensors)*2, [256, 128], 3)
         get_state_from_sequence = lambda x: sensor_state(x, sensors)
     
     elif mode == "image":
-        kwargs = {
-            "conv_and_relu1": {"in_channels": 4, "out_channels": 16, "kernel_size": 8, "stride": 4, "padding": 0},
-            "conv_and_relu2": {"in_channels": 16, "out_channels": 32, "kernel_size": 4, "stride": 2, "padding": 0},
-            "fc1": {"in_features": 32*9*9, "out_features": 256},
-            "fc2": {"in_features": 256, "out_features": 3},
-        }
-        model = CNN(input_shape=(3, 84, 84), **kwargs)
+        # kwargs = {
+        #     "conv_and_relu1": {"in_channels": 4, "out_channels": 16, "kernel_size": 8, "stride": 4, "padding": 0},
+        #     "conv_and_relu2": {"in_channels": 16, "out_channels": 32, "kernel_size": 4, "stride": 2, "padding": 0},
+        #     "fc1": {"in_features": 32*9*9, "out_features": 256},
+        #     "fc2": {"in_features": 256, "out_features": 3},
+        # }
+        # model = CNN(input_shape=(3, 84, 84), **kwargs)
         get_state_from_sequence = image_state
-        
-    episode, score_avg = load_model(model, mode)
-    print(f"Model mode {mode} loaded from episode {episode} with average score {score_avg}")
+    
+    model = get_model(mode)
+    
     
     test_agent(model, game, get_state_from_sequence, num_frames=4, num_games=10)
 
 
 if __name__ == "__main__":
-    mode = "image" # simple, sensor, image
+    mode = "sensor" # simple, sensor, image
     test_model(mode)

@@ -12,6 +12,7 @@ class FCNN(nn.Module):
         super(FCNN, self).__init__()
         self.input_size = input_size
         self.output_size = output_size
+        self.hidden_shape = hidden_shape
         
         self.relu = nn.ReLU()
         
@@ -135,6 +136,11 @@ class CNN(nn.Module):
         return True
     
 class MultiCNN(nn.Module):
+    '''
+    Converts each image in a sequence into a feature vector using CNN
+    Each feature vector is then flattened then passed through a fully connected neural network for final output
+    '''
+    
     def __init__(self, input_shape, output_size, num_frames, state_space, **cnn_structure):
         super(MultiCNN, self).__init__()
         self.input_shape = input_shape

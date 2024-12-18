@@ -17,6 +17,9 @@ class DynamicPlot:
             if len(arg) != length:
                 return False
         return True
+    
+    def save_plot_image(self, filename):
+        plt.savefig(filename)
 
     def plot(self, **mult_data_info):
         mult_data = mult_data_info["mult_data"]
