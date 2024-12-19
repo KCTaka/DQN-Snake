@@ -19,10 +19,11 @@ def get_model(mode, episode=None):
     model_args = model_info["model_args"]
     model_state_dict = model_info["model_state_dict"]
     
-    if mode == "simple" or mode == "sensor":
+    if mode == "simple" or mode == "sensor":                           
         model = FCNN(*model_args)
     elif mode == "image":
-        model = CNN(*model_args)
+        input_shape, cnn_structure = model_args
+        model = CNN(input_shape, **cnn_structure)
         
     model.load_state_dict(model_state_dict)
     
@@ -128,5 +129,5 @@ def test_model(mode = "simple"):
 
 
 if __name__ == "__main__":
-    mode = "sensor" # simple, sensor, image
+    mode = "simple" # simple, sensor, image
     test_model(mode)

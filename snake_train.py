@@ -243,7 +243,7 @@ class DQNTrainer:
             
             # Update the model file if the average score is all-time high
             cur_score_avg = np.mean(score_record)
-            if cur_score_avg > max_avg_score:
+            if cur_score_avg > max_avg_score and len(score_record) > 100:
                 print(f"Model saved with average score {cur_score_avg}")
                 max_avg_score = cur_score_avg
                 update_model_file(self.model, mode, episode, cur_score_avg, replace=True)

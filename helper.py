@@ -68,7 +68,7 @@ def load_model(mode, episode=None):
     # score_avg = float(file_name.split('_s')[1].split('.pth')[0])
     
     # Load the model information
-    model_info = torch.load(model_path)
+    model_info = torch.load(model_path, weights_only=False)
     
     return model_info
 

@@ -40,7 +40,7 @@ def train_dqn(game, mode="simple"):
                     replay_maxlen=1_000_000,
                     initial_epsilon=1,
                     epsilon_linear_decay=1/5_000,
-                    min_epsilon=0.05,
+                    min_epsilon=0.00,
                     gamma=0.95,
                     lr=5e-5,
                     action_num=3,
@@ -54,7 +54,7 @@ def train_dqn(game, mode="simple"):
         plot_episodes=100,
         gameplay=False,
         gameplay_episodes=10,
-        score_maxlen=100,
+        score_maxlen=500,
         k = 1,
         save_plot=True,
     )
@@ -69,5 +69,5 @@ if __name__ == "__main__":
         tick_rate=60,
     )
     
-    train_dqn(game, mode="image")
+    train_dqn(game, mode="simple")
      
