@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pygame Snake with PyTorch AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.2/full/pyodide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/onnxjs/dist/onnx.min.js"></script>
+</head>
+<body>
+    <canvas id="pygame-canvas"></canvas>
+    <div class="toggle-container">
+        <label class="switch">
+            <input type="checkbox" id="ai-toggle">
+            <span class="slider round"></span>
+        </label>
+        <span>AI Control</span>
+    </div>
+
+    <script src="ai_model.js"></script>
+    <script>
+        async function main() {
+            let pyodide = await loadPyodide();
+            await pyodide.loadPackage(["micropip"]);
+            await pyodide.runPythonAsync(`
+import micropip; await micropip.install("pygame-ce")
+            `);
+
+            pyodide.runPython(`
+from main import toggle_ai
+from pyodide.ffi import create_proxy
+js_toggle_ai = create_proxy(toggle_ai)
+            `);
+            let js_toggle_ai = pyodide.globals.get('js_toggle_ai');
+
+            const aiToggle = document.getElementById('ai-toggle');
+            aiToggle.addEventListener('change', (event) => {
+                js_toggle_ai(event.target.checked);
+            });
+
+            let response = await fetch('main.py');
+            let main_py = await response.text();
+            pyodide.runPython(main_py);
+        }
+        main();
+    </script>
+</body>
+</html>

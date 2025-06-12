@@ -34,7 +34,7 @@ def train_dqn(game, mode="simple"):
     trainer = DQNTrainer(model=model,
                     game=game,
                     get_state_from_sequence=get_state_from_sequence,
-                    batch_size=32,
+                    batch_size=256,
                     num_episodes=1_000_000, 
                     max_time_step=None,
                     replay_maxlen=1_000_000,
@@ -69,5 +69,5 @@ if __name__ == "__main__":
         tick_rate=60,
     )
     
-    train_dqn(game, mode="simple")
+    train_dqn(game, mode="image")
      
