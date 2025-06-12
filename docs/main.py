@@ -6,7 +6,15 @@ from js import getAIMove
 
 # Import game code
 from snake_game import SnakeGame
-from snake_states import image_state
+from snake_states import image_state, binary_state, sensor_state
+
+ai_mode = 'image'
+sensors = np.linspace(-np.pi*5/4, np.pi*5/4, 13)
+
+def set_mode(new_mode):
+    """Set AI mode: 'image', 'simple', or 'sensor'"""
+    global ai_mode
+    ai_mode = new_mode
 
 ai_controlled = False
 
@@ -40,7 +48,13 @@ async def main():
             s.appendleft(x)
 
         if ai_controlled:
-            phi = image_state(s)
+            # select state representation based on mode
+            if ai_mode == 'image':
+                phi = image_state(s)
+            elif ai_mode == 'simple':
+                phi = binary_state(s)
+            elif ai_mode == 'sensor':
+                phi = sensor_state(s, sensors)
             flat = phi.flatten().tolist()
             move = await getAIMove(to_js(flat))
             game.do_action(move)

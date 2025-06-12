@@ -1,10 +1,11 @@
 // ai_model.js
-const session = new onnx.InferenceSession({ backendHint: 'webgl' });
+let session;
 const modelUrl = './snake_ai.onnx';
 let isModelLoaded = false;
 
 async function loadModel() {
-    await session.loadModel(modelUrl);
+    // Create session using onnxruntime-web
+    session = await ort.InferenceSession.create(modelUrl, { executionProviders: ['wasm'] });
     isModelLoaded = true;
     console.log("AI Model Loaded");
 }
@@ -15,9 +16,10 @@ async function getAIMove(gameState) {
     }
     // Assuming gameState is a flat array matching [1,C,H,W]
     const C = 4, H = 84, W = 84;
-    const tensor = new onnx.Tensor(new Float32Array(gameState), 'float32', [1, C, H, W]);
-    const outputMap = await session.run([tensor]);
-    const outputTensor = outputMap.get('output');
+    const tensor = new ort.Tensor('float32', new Float32Array(gameState), [1, C, H, W]);
+    const feeds = { input: tensor };
+    const results = await session.run(feeds);
+    const outputTensor = results.output;
     const data = outputTensor.data;
     let maxIdx = 0;
     for (let i = 1; i < data.length; i++) {
