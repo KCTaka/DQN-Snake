@@ -2,8 +2,7 @@
 
 This project aims to implement reinforcement algorithm, DQN, to the classic snake game using PyGame and PyTorch. Deep Q-Network is a method to use neural network to approximate the optimate action-value function through iterative real-life updates. The concept is inspired by the original DeepMind paper, "Playing Atari with Deep Reinforcement Learning". To explore the different kind of states, I have implement 3 major modes/types of states with its corresponding neural network. This allows experimentation with various input features from simple binary vectors to CNN latent vectors. 
 
-A simplified web version is available for on-the-spot demonstration. Due to web incompatability with PyTorch, a open source JS-PyTorch by Eduardo, was used.
-https://eduardoleao052.github.io/js-pytorch/site/ 
+A simplified web version is available for on-the-spot demonstration. Due to web incompatability with PyTorch, a open source tensorflow.js was used. 
 
 ## Features
 
@@ -108,7 +107,7 @@ The `simple` mode uses an 11-dimensional feature vector. It learns very quickly 
 
 ### Sensor Mode
 
-The `sensor` mode uses a more complex state based on ray-casting sensors and food location. This provides more detailed information about the environment, allowing it to get better scores than the `simple` mode. It takes longer to train but navigates a little bit more strategically. 
+The `sensor` mode uses a more complex state based on ray-casting sensors and food location. This provides more detailed information about the environment, allowing it to theoretically get better scores than the `simple` mode. It takes longer to train but navigates a little bit more strategically. However, in practice, probably due to how its implemented, it can't seem to outscore 'simple' mode. 
 
 ![Sensor Agent Training Progress](plots/training_plot_sensor.png)
 

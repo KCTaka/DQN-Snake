@@ -4,52 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Game - JS Pytorch</title>
+    <title>Snake Game - AI Training</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-pytorch/0.7.2/js-pytorch-browser.js"
-        integrity="sha512-l22t7GnqXvHBMCBvPUBdFO2TEYxnb1ziCGcDQcpTB2un16IPA4FE5SIZ8bUR+RwoDZGikQkWisO+fhnakXt9rg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <h1>Snake Game Training with js-pytorch</h1>
-    <div id="container">
-        <div id="game-container">
-            <h2>Game</h2>
-            <canvas id="game-canvas" width="400" height="400"></canvas>
+    <h1>Snake Game - DQN Training (TensorFlow.js)</h1>
+    <div class="main-container">
+        <div class="game-container">
+            <canvas id="game-board" width="400" height="400"></canvas>
+            <div class="game-controls">
+                <label for="speed-slider">Speed:</label>
+                <input type="range" id="speed-slider" min="1" max="100" value="60">
+            </div>
         </div>
-        <div id="controls-and-plot-container">
-            <div id="controls">
-                <h2>Controls</h2>
-                <label for="mode-select">Select Mode:</label>
-                <select id="mode-select">
-                    <option value="simple">Simple</option>
-                    <option value="sensor">Sensor</option>
-                </select>
-                <button id="start-btn">Start Training</button>
-                <div id="stats">
-                    <p>Episode: <span id="episode-count">0</span></p>
-                    <p>Score: <span id="current-score">0</span></p>
-                    <p>Avg Score: <span id="avg-score">0.00</span></p>
-                </div>
+
+        <div class="stats-container">
+            <h2>Training Status</h2>
+            <div class="stats-info">
+                <p>Episode: <span id="episode-count">0</span></p>
+                <p>Epsilon: <span id="epsilon-value">1.00</span></p>
+                <p>High Score: <span id="high-score">0</span></p>
+                <p>Avg Score (last 100): <span id="avg-score">0.00</span></p>
             </div>
-            <div id="plot-container">
-                <h2>Training Progress</h2>
-                <canvas id="plot-canvas" width="600" height="400"></canvas>
-            </div>
+            <h2>Live Score Plot</h2>
+            <canvas id="score-chart"></canvas>
         </div>
     </div>
 
-    <!-- Third-party libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Project scripts -->
-    <script src="js/plotter.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/model.js"></script>
-    <script src="js/states.js"></script>
-    <script src="js/trainer.js"></script>
-    <script src="js/main.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
+    <script src="snake.js"></script>
 </body>
 
 </html>
