@@ -12,14 +12,47 @@
 <body>
     <h1>Snake Game - DQN Training (TensorFlow.js)</h1>
     <div class="main-container">
+        <!-- Left side for the game -->
         <div class="game-container">
             <canvas id="game-board" width="400" height="400"></canvas>
             <div class="game-controls">
                 <label for="speed-slider">Speed:</label>
                 <input type="range" id="speed-slider" min="1" max="100" value="60">
             </div>
+
+            <div class="settings-container">
+                <h2>Settings</h2>
+                <div class="settings-buttons">
+                    <button id="toggle-hyperparameters">Show Settings</button>
+                    <button id="save-session">Save Session</button>
+                    <label for="load-session-input" class="button-label">Load Session</label>
+                    <input type="file" id="load-session-input" accept=".json" style="display: none;">
+                </div>
+
+                <div id="hyperparameters-panel" class="hidden">
+                    <h3>Hyperparameters & Architecture</h3>
+                    <div class="input-group">
+                        <label for="layers-input">Hidden Layers (nodes, comma-sep):</label>
+                        <input type="text" id="layers-input" value="19, 10">
+                    </div>
+                    <div class="input-group">
+                        <label for="gamma-input">Gamma (Discount Rate):</label>
+                        <input type="number" id="gamma-input" step="0.01" value="0.95">
+                    </div>
+                    <div class="input-group">
+                        <label for="lr-input">Learning Rate:</label>
+                        <input type="number" id="lr-input" step="0.00001" value="0.00005">
+                    </div>
+                    <div class="input-group">
+                        <label for="decay-input">Epsilon Linear Decay:</label>
+                        <input type="number" id="decay-input" step="0.00001" value="0.01">
+                    </div>
+                    <button id="restart-button">Restart Training with New Settings</button>
+                </div>
+            </div>
         </div>
 
+        <!-- Right side for stats and plot -->
         <div class="stats-container">
             <h2>Training Status</h2>
             <div class="stats-info">
@@ -30,9 +63,10 @@
             </div>
             <h2>Live Score Plot</h2>
             <canvas id="score-chart"></canvas>
+            <h2>Network Activations</h2>
+            <canvas id="network-canvas" width="400" height="200"></canvas>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
     <script src="snake.js"></script>
 </body>
