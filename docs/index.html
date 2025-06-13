@@ -1,61 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <title>Pygame Snake with PyTorch AI</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.2/full/pyodide.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game - JS Pytorch</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-pytorch/0.7.2/js-pytorch-browser.js"
+        integrity="sha512-l22t7GnqXvHBMCBvPUBdFO2TEYxnb1ziCGcDQcpTB2un16IPA4FE5SIZ8bUR+RwoDZGikQkWisO+fhnakXt9rg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
+
 <body>
-    <canvas id="pygame-canvas"></canvas>
-    <div class="mode-container">
-        <label for="ai-mode">AI Mode:</label>
-        <select id="ai-mode">
-            <option value="image">Image</option>
-            <option value="simple">Simple</option>
-            <option value="sensor">Sensor</option>
-        </select>
+    <h1>Snake Game Training with js-pytorch</h1>
+    <div id="container">
+        <div id="game-container">
+            <h2>Game</h2>
+            <canvas id="game-canvas" width="400" height="400"></canvas>
+        </div>
+        <div id="controls-and-plot-container">
+            <div id="controls">
+                <h2>Controls</h2>
+                <label for="mode-select">Select Mode:</label>
+                <select id="mode-select">
+                    <option value="simple">Simple</option>
+                    <option value="sensor">Sensor</option>
+                </select>
+                <button id="start-btn">Start Training</button>
+                <div id="stats">
+                    <p>Episode: <span id="episode-count">0</span></p>
+                    <p>Score: <span id="current-score">0</span></p>
+                    <p>Avg Score: <span id="avg-score">0.00</span></p>
+                </div>
+            </div>
+            <div id="plot-container">
+                <h2>Training Progress</h2>
+                <canvas id="plot-canvas" width="600" height="400"></canvas>
+            </div>
+        </div>
     </div>
-    <div class="toggle-container">
-        <label class="switch">
-            <input type="checkbox" id="ai-toggle">
-            <span class="slider round"></span>
-        </label>
-        <span>AI Control</span>
-    </div>
 
-    <script src="ai_model.js"></script>
-    <script>
-        async function main() {
-            let pyodide = await loadPyodide();
-            // load pygame-ce via Pyodide-built package
-            await pyodide.loadPackage("pygame-ce");
+    <!-- Third-party libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-            // expose Python controls
-            await pyodide.runPythonAsync(`
-from main import toggle_ai, set_mode
-from pyodide.ffi import create_proxy
-js_toggle_ai = create_proxy(toggle_ai)
-js_set_mode = create_proxy(set_mode)
-            `);
-            let js_toggle_ai = pyodide.globals.get('js_toggle_ai');
-            let js_set_mode = pyodide.globals.get('js_set_mode');
-
-            const aiToggle = document.getElementById('ai-toggle');
-            aiToggle.addEventListener('change', (event) => {
-                js_toggle_ai(event.target.checked);
-            });
-            const modeSelect = document.getElementById('ai-mode');
-            modeSelect.addEventListener('change', (event) => {
-                js_set_mode(event.target.value);
-            });
-
-            let response = await fetch('main.py');
-            let main_py = await response.text();
-            pyodide.runPython(main_py);
-        }
-        main();
-    </script>
+    <!-- Project scripts -->
+    <script src="js/plotter.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/model.js"></script>
+    <script src="js/states.js"></script>
+    <script src="js/trainer.js"></script>
+    <script src="js/main.js" type="module"></script>
 </body>
+
 </html>

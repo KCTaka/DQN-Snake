@@ -1,0 +1,6 @@
+pygame-ce
+numpy
+matplotlib
+opencv-python
+torch
+torchvision

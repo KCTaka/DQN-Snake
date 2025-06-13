@@ -1,7 +1,6 @@
 import pygame
-import numpy as np
 from itertools import product
-from helper import normalize_angle, view_image
+import numpy as np
 
 class SnakeGame():
     def __init__(self, window_size, grid_size, default_reward = 0, food_reward = 1, death_reward = -1, norm_spawn = False, tick_rate=10):
@@ -36,7 +35,7 @@ class SnakeGame():
         self.stop_game = False
         
     def init_pygame(self):
-        self.screen = pygame.display.set_mode(self.window_size)
+        self.screen = pygame.display.set_mode((self.window_size[0], self.window_size[1]))
         self.clock = pygame.time.Clock()
         
     def quit_pygame(self):
