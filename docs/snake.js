@@ -1,4 +1,3 @@
-// --- DOM Elements ---
 const gameBoard = document.getElementById('game-board');
 const ctx = gameBoard.getContext('2d');
 const highScoreElement = document.getElementById('high-score');
@@ -17,13 +16,11 @@ const decayInput = document.getElementById('decay-input');
 const restartButton = document.getElementById('restart-button');
 const networkCanvas = document.getElementById('network-canvas');
 
-// --- Game Constants & Variables ---
 const gridSize = 8;
 const cellSize = gameBoard.width / gridSize;
 let gameSpeed = 100 - speedSlider.value;
-let isTrainingActive = false; // Flag to control the main loop
+let isTrainingActive = false;
 
-// --- Network Visualizer Class ---
 class NetworkVisualizer {
     constructor(canvas) {
         this.ctx = canvas.getContext('2d');
@@ -97,8 +94,6 @@ class NetworkVisualizer {
     }
 }
 
-
-// --- RL Agent Class ---
 class DQNAgent {
     constructor(stateSize, actionSize, hiddenLayers, hyperparameters) {
         this.stateSize = stateSize;
@@ -112,7 +107,7 @@ class DQNAgent {
         this.epsilonLinearDecay = hyperparameters.epsilonDecay;
         this.epsilon = 1.0;
         this.epsilonInitial = 1.0;
-        this.epsilonMin = 0.00;
+        this.epsilonMin = 0.05;
         this.model = this.createModel();
         this.activationModel = this.createActivationModel();
     }
@@ -172,13 +167,9 @@ class DQNAgent {
         });
     }
 
-    // --- START CORRECTION ---
     dispose() {
-        // The main model owns all the layers. Disposing of it is sufficient.
-        // Disposing of the activationModel separately would cause a "double dispose" error.
         this.model.dispose();
     }
-    // --- END CORRECTION ---
 
     async replay(batchSize) {
         const currentMemorySize = this.memoryFilled ? this.memory.length : this.memoryIndex;
@@ -221,7 +212,6 @@ class DQNAgent {
     }
 }
 
-// --- Main Game & Agent Initialization ---
 let snake, food, direction, score, gameOver, frameIter;
 let episode = 0;
 let scoreHistory = [];
@@ -246,8 +236,6 @@ function initializeAgent(hiddenLayers) {
     networkVisualizer.updateShape([11, ...hiddenLayers, 3]);
 }
 
-
-// --- Core Game Logic ---
 function resetGame() {
     snake = [{ x: Math.floor(gridSize / 2), y: Math.floor(gridSize / 2) }];
     direction = { x: 1, y: 0 };
@@ -314,7 +302,6 @@ async function gameStep() {
     await agent.replay(256);
 }
 
-// --- Main Loop and Drawing ---
 function draw() {
     ctx.clearRect(0, 0, gameBoard.width, gameBoard.height);
     for (let i = 0; i < snake.length; i++) {
@@ -326,7 +313,6 @@ function draw() {
     networkVisualizer.draw(lastActivations);
 }
 
-// --- Plotting Logic ---
 const chartCtx = document.getElementById('score-chart').getContext('2d');
 const scoreChart = new Chart(chartCtx, { type: 'line', data: { labels: [], datasets: [{ label: 'Average Score (100 eps)', data: [], borderColor: '#4caf50', tension: 0.1 }, { label: 'Score', data: [], borderColor: 'rgba(244, 67, 54, 0.5)', showLine: false, pointRadius: 3 }] }, options: { scales: { y: { beginAtZero: true } } } });
 
@@ -365,7 +351,7 @@ function redrawChartFromHistory() {
 }
 
 async function mainLoop() {
-    if (!isTrainingActive) return; // Stop the loop if not active
+    if (!isTrainingActive) return;
     await gameStep();
     draw();
     if (gameOver) {
@@ -378,14 +364,13 @@ async function mainLoop() {
         updatePlot();
         resetGame();
     }
-    if (isTrainingActive) { // Check again before queuing the next frame
+    if (isTrainingActive) {
         setTimeout(mainLoop, gameSpeed);
     }
 }
 
-// --- Event Listeners and Handlers ---
 function startNewSession(isInitialStart = false) {
-    isTrainingActive = false; // Stop any previous loop
+    isTrainingActive = false;
     if (agent) agent.dispose();
 
     initializeAgent();
@@ -494,5 +479,4 @@ loadSessionInput.addEventListener('change', (event) => {
     event.target.value = '';
 });
 
-// --- Initial Setup & Start ---
 startNewSession(true);

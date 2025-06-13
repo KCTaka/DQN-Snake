@@ -124,3 +124,16 @@ h3 {
 #restart-button:hover {
     background-color: #d32f2f;
 }
+
+.repo-link {
+    margin: 10px 0;
+}
+
+.repo-link a {
+    color: #4caf50;
+    text-decoration: none;
+}
+
+.repo-link a:hover {
+    text-decoration: underline;
+}
